@@ -25,12 +25,14 @@ class Simulation:
         server_path: str = _default_path,
         sync_training: bool = True,
         log_file_path: str | None = None,
+        num_slots: int = 0
     ):
         self.game_port = game_port
         self.remote_env_port = remote_env_port
         self.server_path = server_path
         self.log_file_path = log_file_path
         self.sync_training = sync_training
+        self.num_slots = num_slots
         self.process: subprocess.Popen[Any] | None = None
         self._psutil_process: psutil.Process | None = None
 
@@ -45,7 +47,8 @@ class Simulation:
             "GAME_PORT": str(self.game_port),
             "REMOTE_ENV_PORT": str(self.remote_env_port),
             "SYNC_TRAINING": str(self.sync_training),
-            "RUN_EVAL_BOTS": "false",
+            "RUN_EVAL_BOTS": "true",
+            "DATA_COLLECTION_SLOTS": str(self.num_slots), # <--- Pass to Java
             "TRAIN": "true",
             "SHOW_ENV_DEBUGGER": "false",
         }
