@@ -1,62 +1,26 @@
 package com.github.naton1.rl.env.nh;
 
-import static com.elvarg.util.ItemIdentifiers.AMULET_OF_BLOOD_FURY;
-import static com.elvarg.util.ItemIdentifiers.ANCIENT_CHAPS;
-import static com.elvarg.util.ItemIdentifiers.ANCIENT_DHIDE;
-import static com.elvarg.util.ItemIdentifiers.ARCHERS_RING_I_;
-import static com.elvarg.util.ItemIdentifiers.BARROWS_GLOVES;
-import static com.elvarg.util.ItemIdentifiers.BERSERKER_RING_I_;
-import static com.elvarg.util.ItemIdentifiers.DRAGONSTONE_DRAGON_BOLTS_E_;
-import static com.elvarg.util.ItemIdentifiers.DRAGON_CLAWS;
-import static com.elvarg.util.ItemIdentifiers.DRAGON_SCIMITAR;
-import static com.elvarg.util.ItemIdentifiers.FIRE_CAPE;
-import static com.elvarg.util.ItemIdentifiers.IMBUED_GUTHIX_CAPE;
-import static com.elvarg.util.ItemIdentifiers.INFERNAL_CAPE;
-import static com.elvarg.util.ItemIdentifiers.INFINITY_BOOTS;
-import static com.elvarg.util.ItemIdentifiers.INFINITY_BOTTOMS;
-import static com.elvarg.util.ItemIdentifiers.INFINITY_TOP;
-import static com.elvarg.util.ItemIdentifiers.KODAI_WAND;
-import static com.elvarg.util.ItemIdentifiers.MAGES_BOOK;
-import static com.elvarg.util.ItemIdentifiers.OCCULT_NECKLACE;
-import static com.elvarg.util.ItemIdentifiers.OPAL_DRAGON_BOLTS_E_;
-import static com.elvarg.util.ItemIdentifiers.RANGING_POTION_1_;
-import static com.elvarg.util.ItemIdentifiers.RANGING_POTION_2_;
-import static com.elvarg.util.ItemIdentifiers.RANGING_POTION_3_;
-import static com.elvarg.util.ItemIdentifiers.RANGING_POTION_4_;
-import static com.elvarg.util.ItemIdentifiers.RUNE_DEFENDER;
-import static com.elvarg.util.ItemIdentifiers.SARADOMIN_BREW_4_;
-import static com.elvarg.util.ItemIdentifiers.SEERS_RING_I_;
-import static com.elvarg.util.ItemIdentifiers.SHARK;
-import static com.elvarg.util.ItemIdentifiers.SLAYER_HELMET_I_;
-import static com.elvarg.util.ItemIdentifiers.SPIRIT_SHIELD;
-import static com.elvarg.util.ItemIdentifiers.SUPER_COMBAT_POTION_1_;
-import static com.elvarg.util.ItemIdentifiers.SUPER_COMBAT_POTION_2_;
-import static com.elvarg.util.ItemIdentifiers.SUPER_COMBAT_POTION_3_;
-import static com.elvarg.util.ItemIdentifiers.SUPER_COMBAT_POTION_4_;
-import static com.elvarg.util.ItemIdentifiers.SUPER_RESTORE_4_;
-import static com.elvarg.util.ItemIdentifiers.VOLATILE_NIGHTMARE_STAFF;
-import static com.elvarg.util.ItemIdentifiers.ZARYTE_CROSSBOW;
-
 import com.elvarg.game.content.PrayerHandler;
 import com.elvarg.game.model.MagicSpellbook;
 import com.github.naton1.rl.env.Loadout;
 import java.util.List;
+
+import static com.elvarg.util.ItemIdentifiers.*;
 
 public class NhZerkLoadout extends DynamicNhLoadout {
 
     @Override
     public int[] getRangedGear() {
         return new int[] {
-            ZARYTE_CROSSBOW,
+            HEAVY_BALLISTA,
             ANCIENT_DHIDE,
             ANCIENT_CHAPS,
             AMULET_OF_BLOOD_FURY,
-            SPIRIT_SHIELD,
             SLAYER_HELMET_I_,
             BARROWS_GLOVES,
             INFINITY_BOOTS,
             SEERS_RING_I_,
-            OPAL_DRAGON_BOLTS_E_,
+            DRAGON_JAVELIN,
             INFERNAL_CAPE
         };
     }
