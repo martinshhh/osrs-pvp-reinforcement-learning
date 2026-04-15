@@ -1,11 +1,9 @@
 import csv
-import json
 import os
 import random
 from datetime import datetime
 from typing import Any
 
-from pvp_ml.scripted.plugins.prayer_predictor_plugin import PrayerPredictorPlugin
 from pvp_ml.scripted.script_plugin import ScriptPlugin
 
 OUTPUT_CSV = os.path.normpath(os.path.join(
@@ -14,25 +12,22 @@ OUTPUT_CSV = os.path.normpath(os.path.join(
     "kuri-prayer-predictor-api", "enemy_gear_log.csv",
 ))
 
-# Load spec weapon constants from the single source of truth.
-# combat_config.json lives in kuri-prayer-predictor-api and is shared with
-# the Python training code and the Java plugin — edit it there, not here.
-_CONFIG_PATH = os.path.normpath(os.path.join(
-    os.path.dirname(__file__),
-    "..", "..", "..", "..", "..", "Kuri",
-    "kuri-prayer-predictor-api", "combat_config.json",
-))
-with open(_CONFIG_PATH, "r", encoding="utf-8") as _f:
-    _cfg = json.load(_f)
-
-_MAGIC_SPEC_WEAPONS = {int(k): v for k, v in _cfg["magic_spec_weapons"].items()}
-_MELEE_SPEC_WEAPONS = {int(k): v for k, v in _cfg["melee_spec_weapons"].items()}
-_LOW_HP_THRESHOLD = _cfg["low_hp_threshold"]
-
 CSV_HEADER = [
-    "tick", "weapon_id", "weapon_type", "body_id", "body_type",
-    "legs_id", "legs_type", "helm_id", "helm_type",
-    "shield_id", "shield_type", "distance", "is_frozen", "spec_energy_pct",
+    "tick",
+    "target_weapon_melee",
+    "target_weapon_mage",
+    "target_weapon_ranged",
+    "target_melee_atk_bonus",
+    "target_magic_atk_bonus",
+    "target_ranged_atk_bonus",
+    "target_melee_str_bonus",
+    "target_magic_str_bonus",
+    "target_ranged_str_bonus",
+    "target_distance",
+    "target_frozen_ticks",
+    "target_attack_cycle_ticks",
+    "target_special_percent",
+    "target_just_attacked"
     "player_hp_pct",
 ]
 
@@ -62,16 +57,13 @@ class SimDataCollectorPlugin(ScriptPlugin):
         self._fight_active = False
         self._episodes = 0
         self._row_buffer: list[list] = []
-        self._prayer_predictor = PrayerPredictorPlugin()
         print(f"[DC:{self._env_id}] CSV → {OUTPUT_CSV}")
 
     def predict(
             self,
-            target_weapon_id: float = 0.0,
-            target_body_id: float = 0.0,
-            target_legs_id: float = 0.0,
-            target_helm_id: float = 0.0,
-            target_shield_id: float = 0.0,
+            target_melee_prayer: bool = False,
+            target_ranged_prayer: bool = False,
+            target_magic_prayer: bool = False,
             target_using_melee: bool = False,
             target_using_ranged: bool = False,
             target_using_mage: bool = False,
@@ -128,6 +120,13 @@ class SimDataCollectorPlugin(ScriptPlugin):
             use_combat_potion: bool = False,
             use_ranged_potion: bool = False,
             use_brew: bool = False,
+            target_magic_accuracy: float = 00,
+            target_magic_strength: float = 00,
+            target_ranged_accuracy: float = 00,
+            target_ranged_strength: float = 00,
+            target_melee_accuracy: float = 00,
+            target_melee_strength: float = 00,
+            target_just_attacked: float = 00,
             **kwargs: Any,
     ) -> dict[str, str]:
 
@@ -139,7 +138,6 @@ class SimDataCollectorPlugin(ScriptPlugin):
             self._tick = 0
             self._episodes += 1
             self._row_buffer = []
-            self._prayer_predictor._fight_active = False
             print(f"[DC:{self._env_id}] Episode {self._episodes} started")
         elif not target_present and self._fight_active:
             self._fight_active = False
@@ -151,22 +149,24 @@ class SimDataCollectorPlugin(ScriptPlugin):
             self._flush_fight()
             print(f"[DC:{self._env_id}] Episode {self._episodes} ended (died) — {self._tick} ticks")
 
-        if self._fight_active and int(target_weapon_id) != 0:
-            weapon_id = int(target_weapon_id)
-            spec = int(target_special_percent)
-            hp_pct = round(float(player_health_percent), 3)
-
+        if self._fight_active:
             self._row_buffer.append([
                 self._tick,
-                weapon_id, style,
-                int(target_body_id), style,
-                int(target_legs_id), style,
-                int(target_helm_id), 0,
-                int(target_shield_id), 0,
-                int(player_to_target_distance),
-                1 if target_frozen_ticks > 0 else 0,
-                spec,
-                hp_pct
+                target_using_melee.item(),
+                target_using_mage.item(),
+                target_using_ranged.item(),
+                target_melee_accuracy.item(),
+                target_magic_accuracy.item(),
+                target_ranged_accuracy.item(),
+                target_melee_strength.item(),
+                target_magic_strength.item(),
+                target_ranged_strength.item(),
+                player_to_target_distance.item(),
+                target_frozen_ticks.item(),
+                target_attack_cycle_ticks.item(),
+                target_special_percent.item(),
+                target_just_attacked.item(),
+                player_health_percent.item()
             ])
             self._tick += 1
 
@@ -189,24 +189,15 @@ class SimDataCollectorPlugin(ScriptPlugin):
         elif strength_level < 0.95 and use_combat_potion:
             actions["potion"] = "use_combat_potion"
 
+        if target_using_mage and mage_prayer:
+            actions["prayer"] = "mage_prayer"
+        elif target_using_ranged and ranged_prayer:
+            actions["prayer"] = "ranged_prayer"
+        elif target_using_melee and melee_prayer:
+            actions["prayer"] = "melee_prayer"
+
         if use_veng and not is_veng_active and player_veng_cooldown_ticks == 0:
             actions["veng"] = "use_veng"
-
-        prayer_action = self._prayer_predictor._predict_prayer(
-            weapon_id=int(target_weapon_id), body_id=int(target_body_id),
-            legs_id=int(target_legs_id), helm_id=int(target_helm_id),
-            shield_id=int(target_shield_id), weapon_type=style,
-            body_type=style, legs_type=style,
-            cooldown=int(target_attack_cycle_ticks),
-            distance=max(1, int(player_to_target_distance)),
-            is_frozen=target_frozen_ticks > 0,
-            spec_energy=int(target_special_percent),
-            player_hp_pct=float(player_health_percent),
-            fallback_style=style,
-        )
-        if prayer_action and _PRAYER_MASKS.get(prayer_action, lambda **_: False)(
-                mage_prayer=mage_prayer, ranged_prayer=ranged_prayer, melee_prayer=melee_prayer):
-            actions["prayer"] = prayer_action
 
         if not target_is_frozen:
             # Not frozen: close the gap and try to freeze
