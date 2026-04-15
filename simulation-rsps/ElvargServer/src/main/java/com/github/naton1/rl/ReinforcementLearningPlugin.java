@@ -26,6 +26,11 @@ public class ReinforcementLearningPlugin extends Plugin {
             final RemoteEnvironmentServer remoteEnvironmentServer = new RemoteEnvironmentServer();
             cleanupTasks.add(remoteEnvironmentServer::close);
         }
+        if (EnvConfig.isBotFightsEnabled()) {
+            final AgentFightBotsLoader agentFightBotsLoader = new AgentFightBotsLoader();
+            agentFightBotsLoader.load();
+            cleanupTasks.add(agentFightBotsLoader::unload);
+        }
         if (EnvConfig.isEvalEnabled()) {
             final AgentBotLoader agentBotLoader = new AgentBotLoader();
             agentBotLoader.load();

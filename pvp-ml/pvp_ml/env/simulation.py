@@ -25,6 +25,8 @@ class Simulation:
         server_path: str = _default_path,
         sync_training: bool = True,
         log_file_path: str | None = None,
+        fight_bots: bool = False,
+        run_eval_bots: bool = False,
         num_slots: int = 0
     ):
         self.game_port = game_port
@@ -32,6 +34,8 @@ class Simulation:
         self.server_path = server_path
         self.log_file_path = log_file_path
         self.sync_training = sync_training
+        self.fight_bots = fight_bots
+        self.run_eval_bots = run_eval_bots
         self.num_slots = num_slots
         self.process: subprocess.Popen[Any] | None = None
         self._psutil_process: psutil.Process | None = None
@@ -47,8 +51,9 @@ class Simulation:
             "GAME_PORT": str(self.game_port),
             "REMOTE_ENV_PORT": str(self.remote_env_port),
             "SYNC_TRAINING": str(self.sync_training),
-            "RUN_EVAL_BOTS": "true",
-            "DATA_COLLECTION_SLOTS": str(self.num_slots), # <--- Pass to Java
+            "BOT_FIGHTS": str(self.fight_bots),
+            "RUN_EVAL_BOTS": str(self.run_eval_bots),
+            "DATA_COLLECTION_SLOTS": str(self.num_slots),
             "TRAIN": "true",
             "SHOW_ENV_DEBUGGER": "false",
         }

@@ -23,7 +23,7 @@ import torch as th
 
 from pvp_ml.env.pvp_env import PvpEnv
 from pvp_ml.env.simulation import Simulation
-from pvp_ml.scripted.plugins.baseline_plugin import BaselinePlugin
+from pvp_ml.scripted.plugins.sim_data_collector import SimDataCollectorPlugin
 
 logging.basicConfig(
     level=logging.INFO,
@@ -32,11 +32,14 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-BUILDS = ["FineTunedNhPure", "FineTunedNhZerk", "FineTunedNhMax"]
+BUILDS = [
+    # "FineTunedNhPure",
+    # "FineTunedNhZerk",
+    "FineTunedNhMax"]
 
 _BUILD_FOR_TARGET = {
-    "FineTunedNhPure": "PURE",
-    "FineTunedNhZerk": "ZERKER",
+    # "FineTunedNhPure": "PURE",
+    # "FineTunedNhZerk": "ZERKER",
     "FineTunedNhMax":  "MAXED",
 }
 
@@ -46,7 +49,7 @@ def _slot_target(build: str, slot: int) -> str:
 
 
 class RandomTargetPvpEnv(PvpEnv):
-    """PvpEnv that picks a build and ensures BOTH players use that build."""
+    """PvpEnv that picks a build and ensures BOTH bots use that build. Pure-Pure,Zerk-Zerk,Max-Max"""
 
     def __init__(self, slot: int, **kwargs):
         super().__init__(**kwargs)
@@ -54,22 +57,19 @@ class RandomTargetPvpEnv(PvpEnv):
 
     async def reset_async(self, *, seed=None, options=None):
         # Pick the build for this episode
-        # If you only want Zerks, change the BUILDS list at the top of the file
         build_label = random.choice(BUILDS)
 
-        # 1. Set the target (the bot on the server)
-        # e.g. "FineTunedNhZerk-0"
+        # Set the target (the bot on the server)
         self._target = _slot_target(build_label, self._slot)
 
         # 2. Set the Agent's OWN build to match the target
-        # e.g. "ZERKER"
         self._reset_params["accountBuild"] = _BUILD_FOR_TARGET[build_label]
 
         logger.info(f"[{self._env_id}] Symmetric Match: {self._reset_params['accountBuild']} vs {self._target}")
 
         return await super().reset_async(seed=seed, options=options)
 
-def make_env(slot: int, port: int, plugin: BaselinePlugin) -> RandomTargetPvpEnv:
+def make_env(slot: int, port: int, plugin: SimDataCollectorPlugin) -> RandomTargetPvpEnv:
     from pvp_ml.scripted.script_plugin_adapter import ScriptPluginAdapter
     from pvp_ml.util.contract_loader import load_environment_contract
     meta = load_environment_contract("NhEnv")
@@ -100,12 +100,12 @@ class FixedTargetPvpEnv(PvpEnv):
         self._slot = slot
 
     async def reset_async(self, *, seed=None, options=None):
-        # This Agent (e.g. AgentPure-0) attacks this Target (TargetPure-0)
+        # This Agent (AgentPure-0) attacks this Target (TargetPure-0)
         self._target = _target_name(self._build_label, self._slot)
         self._reset_params["accountBuild"] = _BUILD_FOR_TARGET[self._build_label]
         return await super().reset_async(seed=seed, options=options)
 
-def make_env(build_label: str, slot: int, port: int, plugin: BaselinePlugin) -> FixedTargetPvpEnv:
+def make_env(build_label: str, slot: int, port: int, plugin: SimDataCollectorPlugin) -> FixedTargetPvpEnv:
     from pvp_ml.scripted.script_plugin_adapter import ScriptPluginAdapter
     from pvp_ml.util.contract_loader import load_environment_contract
     meta = load_environment_contract("NhEnv")
@@ -164,13 +164,13 @@ async def run_all(envs: list, num_episodes: int) -> None:
 
 def _patch_csv_for_thread_safety(lock: threading.Lock) -> None:
     """Lock _flush_fight — the only method that writes to the file."""
-    # # _orig = BaselinePlugin._flush_fight
-    #
-    # def _locked(self):
-    #     with lock:
-    #         _orig(self)
-    #
-    # BaselinePlugin._flush_fight = _locked
+    _orig = SimDataCollectorPlugin._flush_fight
+
+    def _locked(self):
+        with lock:
+            _orig(self)
+
+    SimDataCollectorPlugin._flush_fight = _locked
 
 
 def main() -> None:
@@ -179,6 +179,7 @@ def main() -> None:
     )
     parser.add_argument("--num-episodes", type=int, default=300,
                         help="Total episodes across all envs")
+    parser.add_argument("--fight-bots", type=bool, default=False)
     parser.add_argument("--num-envs", type=int, default=4)
     parser.add_argument("--simulation-port", type=int, default=43595)
     parser.add_argument("--remote-env-port", type=int, default=7070)
@@ -192,10 +193,10 @@ def main() -> None:
 
     def _run(port: int) -> None:
         all_envs = []
-        # Create N environments for EVERY build
+        # Create N environments for every build
         for build in BUILDS:
             for i in range(args.num_envs):
-                plugin = BaselinePlugin()
+                plugin = SimDataCollectorPlugin()
                 env = make_env(build, i, port, plugin)
                 all_envs.append(env)
 
@@ -207,7 +208,8 @@ def main() -> None:
                 game_port=args.simulation_port,
                 remote_env_port=args.remote_env_port,
                 sync_training=False,
-                num_slots=args.num_envs # Java AgentBotLoader uses this for the 'per-build' count
+                fight_bots=args.fight_bots, # Set to true to run simulation fights
+                num_slots=args.num_envs # if fight_bots is set to true, this represents the amount of fights PER build (Pure, Zerk, Max)
         ) as sim:
             sim.wait_until_loaded()
             _run(sim.remote_env_port)
