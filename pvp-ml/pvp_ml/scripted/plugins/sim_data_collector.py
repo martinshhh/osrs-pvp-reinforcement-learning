@@ -27,7 +27,7 @@ CSV_HEADER = [
     "target_frozen_ticks",
     "target_attack_cycle_ticks",
     "target_special_percent",
-    "target_just_attacked"
+    "target_just_attacked",
     "player_hp_pct",
 ]
 

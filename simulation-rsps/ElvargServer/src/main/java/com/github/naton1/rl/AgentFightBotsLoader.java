@@ -26,8 +26,8 @@ public class AgentFightBotsLoader {
         if (SLOTS <= 0) return;
 
         List<BuildType> builds = List.of(
-//                new BuildType("Pure", NhEnvironmentParams.AccountBuild.PURE),
-//                new BuildType("Zerk", NhEnvironmentParams.AccountBuild.ZERKER),
+                new BuildType("Pure", NhEnvironmentParams.AccountBuild.PURE),
+                new BuildType("Zerk", NhEnvironmentParams.AccountBuild.ZERKER),
                 new BuildType("Max", NhEnvironmentParams.AccountBuild.MAXED));
 
         for (BuildType build : builds) {

@@ -73,7 +73,7 @@ public class RemoteEnvironmentServer {
                     // Skip logging if we've already logged there's no environments
                     return;
                 }
-                log.info("Processing tick; {} remote environments", agents.size());
+//                log.info("Processing tick; {} remote environments", agents.size());
                 isEmpty = agents.isEmpty();
             }
         };

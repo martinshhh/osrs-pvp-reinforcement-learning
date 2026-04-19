@@ -33,13 +33,13 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 BUILDS = [
-    # "FineTunedNhPure",
-    # "FineTunedNhZerk",
+    "FineTunedNhPure",
+    "FineTunedNhZerk",
     "FineTunedNhMax"]
 
 _BUILD_FOR_TARGET = {
-    # "FineTunedNhPure": "PURE",
-    # "FineTunedNhZerk": "ZERKER",
+    "FineTunedNhPure": "PURE",
+    "FineTunedNhZerk": "ZERKER",
     "FineTunedNhMax":  "MAXED",
 }
 
