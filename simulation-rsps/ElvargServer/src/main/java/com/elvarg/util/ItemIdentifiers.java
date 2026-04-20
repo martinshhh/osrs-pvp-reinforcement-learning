@@ -26302,6 +26302,6 @@ public class ItemIdentifiers {
     public static final int SHATTERED_RELIC_HUNTER_T3_ARMOUR_SET = 26560;
     public static final int SHATTERED_RELIC_HUNTER_T3_ARMOUR_SET_2 = 26561;
     public static final int SHATTERED_RELIC_HUNTER_T3_ARMOUR_SET_3 = 26562;
-
+    public static final int VOIDWAKER = 27690;
 
 }

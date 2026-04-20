@@ -773840,6 +773840,16 @@
     "turn90CWAnim": 821,
     "turn90CCWAnim": 821,
     "weight": null
+  },
+    {
+      "id": 27690,
+      "name": "Voidwaker",
+      "equipmentType": "WEAPON",
+      "weaponInterface": "SCIMITAR",
+      "bonuses": [70, 80, -2, 5, 0, 0, 1, 0, 2, 0, 80, 0, 0, 0],
+      "stackable": false,
+      "unnotedId": 27690,
+      "notedId": 27691,
+      "value": 5000000
   }
-
 ]

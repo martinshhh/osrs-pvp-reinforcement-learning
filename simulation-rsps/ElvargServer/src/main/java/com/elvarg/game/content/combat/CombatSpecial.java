@@ -7,36 +7,7 @@ import java.util.stream.Collectors;
 import com.elvarg.game.content.Dueling.DuelRule;
 import com.elvarg.game.content.combat.WeaponInterfaces.WeaponInterface;
 import com.elvarg.game.content.combat.method.CombatMethod;
-import com.elvarg.game.content.combat.method.impl.specials.AbyssalBludgeonCombatMethod;
-import com.elvarg.game.content.combat.method.impl.specials.AbyssalDaggerCombatMethod;
-import com.elvarg.game.content.combat.method.impl.specials.AbyssalTentacleCombatMethod;
-import com.elvarg.game.content.combat.method.impl.specials.AbyssalWhipCombatMethod;
-import com.elvarg.game.content.combat.method.impl.specials.AncientGodswordCombatMethod;
-import com.elvarg.game.content.combat.method.impl.specials.ArmadylCrossbowCombatMethod;
-import com.elvarg.game.content.combat.method.impl.specials.ArmadylGodswordCombatMethod;
-import com.elvarg.game.content.combat.method.impl.specials.BallistaCombatMethod;
-import com.elvarg.game.content.combat.method.impl.specials.BandosGodswordCombatMethod;
-import com.elvarg.game.content.combat.method.impl.specials.BarrelchestAnchorCombatMethod;
-import com.elvarg.game.content.combat.method.impl.specials.DarkBowCombatMethod;
-import com.elvarg.game.content.combat.method.impl.specials.DragonClawCombatMethod;
-import com.elvarg.game.content.combat.method.impl.specials.DragonDaggerCombatMethod;
-import com.elvarg.game.content.combat.method.impl.specials.DragonHalberdCombatMethod;
-import com.elvarg.game.content.combat.method.impl.specials.DragonKnifeCombatMethod;
-import com.elvarg.game.content.combat.method.impl.specials.DragonLongswordCombatMethod;
-import com.elvarg.game.content.combat.method.impl.specials.DragonMaceCombatMethod;
-import com.elvarg.game.content.combat.method.impl.specials.DragonScimitarCombatMethod;
-import com.elvarg.game.content.combat.method.impl.specials.DragonWarhammerCombatMethod;
-import com.elvarg.game.content.combat.method.impl.specials.GraniteMaulCombatMethod;
-import com.elvarg.game.content.combat.method.impl.specials.MagicShortbowCombatMethod;
-import com.elvarg.game.content.combat.method.impl.specials.MorrigansJavelinCombatMethod;
-import com.elvarg.game.content.combat.method.impl.specials.SaradominGodswordCombatMethod;
-import com.elvarg.game.content.combat.method.impl.specials.SaradominSwordCombatMethod;
-import com.elvarg.game.content.combat.method.impl.specials.ShoveCombatMethod;
-import com.elvarg.game.content.combat.method.impl.specials.StatiusWarhammerCombatMethod;
-import com.elvarg.game.content.combat.method.impl.specials.VestasLongswordCombatMethod;
-import com.elvarg.game.content.combat.method.impl.specials.VolatileNightmareStaffCombatMethod;
-import com.elvarg.game.content.combat.method.impl.specials.ZamorakGodswordCombatMethod;
-import com.elvarg.game.content.combat.method.impl.specials.ZaryteCrossbowCombatMethod;
+import com.elvarg.game.content.combat.method.impl.specials.*;
 import com.elvarg.game.entity.impl.Mobile;
 import com.elvarg.game.entity.impl.player.Player;
 import com.elvarg.game.model.container.impl.Equipment;
@@ -121,7 +92,8 @@ public enum CombatSpecial {
 
     VOLATILE_NIGHTMARE_STAFF(new int[]{24424}, 55, 1, 1.5,
                              new VolatileNightmareStaffCombatMethod(), WeaponInterface.STAFF),
-    ;
+  VOIDWAKER(
+      new int[] {27690}, 50, 1.10, 1.50, new VoidwakerCombatMethod(), WeaponInterface.SCIMITAR);
 
     public static final Set<Integer> SPECIAL_ATTACK_WEAPON_IDS = Arrays.stream(CombatSpecial.values()).flatMap(cs -> Arrays.stream(cs.getIdentifiers()).boxed()).collect(Collectors.toSet());
 

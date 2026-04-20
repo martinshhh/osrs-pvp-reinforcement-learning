@@ -25,10 +25,12 @@ public class AgentFightBotsLoader {
     System.out.println("SLOTS + " + SLOTS);
         if (SLOTS <= 0) return;
 
-        List<BuildType> builds = List.of(
-                new BuildType("Pure", NhEnvironmentParams.AccountBuild.PURE),
-                new BuildType("Zerk", NhEnvironmentParams.AccountBuild.ZERKER),
-                new BuildType("Max", NhEnvironmentParams.AccountBuild.MAXED));
+    List<BuildType> builds =
+        List.of(
+//            new BuildType("Pure", NhEnvironmentParams.AccountBuild.PURE),
+//            new BuildType("Zerk", NhEnvironmentParams.AccountBuild.ZERKER),
+//            new BuildType("Max", NhEnvironmentParams.AccountBuild.MAXED),
+            new BuildType("Med", NhEnvironmentParams.AccountBuild.MED));
 
         for (BuildType build : builds) {
             for (int i = 0; i < SLOTS; i++) {

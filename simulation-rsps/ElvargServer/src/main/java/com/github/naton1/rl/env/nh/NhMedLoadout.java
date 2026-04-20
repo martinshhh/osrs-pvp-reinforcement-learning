@@ -1,48 +1,11 @@
 package com.github.naton1.rl.env.nh;
 
-import static com.elvarg.util.ItemIdentifiers.ABYSSAL_TENTACLE;
-import static com.elvarg.util.ItemIdentifiers.AMULET_OF_BLOOD_FURY;
-import static com.elvarg.util.ItemIdentifiers.ANCESTRAL_ROBE_BOTTOM;
-import static com.elvarg.util.ItemIdentifiers.ANCESTRAL_ROBE_TOP;
-import static com.elvarg.util.ItemIdentifiers.ARMADYL_CHAINSKIRT;
-import static com.elvarg.util.ItemIdentifiers.ARMADYL_CHESTPLATE;
-import static com.elvarg.util.ItemIdentifiers.ARMADYL_GODSWORD;
-import static com.elvarg.util.ItemIdentifiers.AVERNIC_DEFENDER;
-import static com.elvarg.util.ItemIdentifiers.BARROWS_GLOVES;
-import static com.elvarg.util.ItemIdentifiers.BLESSED_SPIRIT_SHIELD;
-import static com.elvarg.util.ItemIdentifiers.BOOTS_OF_BRIMSTONE;
-import static com.elvarg.util.ItemIdentifiers.DRAGONSTONE_DRAGON_BOLTS_E_;
-import static com.elvarg.util.ItemIdentifiers.DRAGON_CLAWS;
-import static com.elvarg.util.ItemIdentifiers.GUTHANS_HELM;
-import static com.elvarg.util.ItemIdentifiers.IMBUED_GUTHIX_CAPE;
-import static com.elvarg.util.ItemIdentifiers.INFERNAL_CAPE;
-import static com.elvarg.util.ItemIdentifiers.KARILS_LEATHERSKIRT_100;
-import static com.elvarg.util.ItemIdentifiers.KARILS_LEATHERTOP_100;
-import static com.elvarg.util.ItemIdentifiers.MAGES_BOOK;
-import static com.elvarg.util.ItemIdentifiers.OCCULT_NECKLACE;
-import static com.elvarg.util.ItemIdentifiers.OPAL_DRAGON_BOLTS_E_;
-import static com.elvarg.util.ItemIdentifiers.RANGING_POTION_1_;
-import static com.elvarg.util.ItemIdentifiers.RANGING_POTION_2_;
-import static com.elvarg.util.ItemIdentifiers.RANGING_POTION_3_;
-import static com.elvarg.util.ItemIdentifiers.RANGING_POTION_4_;
-import static com.elvarg.util.ItemIdentifiers.SARADOMIN_BREW_4_;
-import static com.elvarg.util.ItemIdentifiers.SEERS_RING_I_;
-import static com.elvarg.util.ItemIdentifiers.SHARK;
-import static com.elvarg.util.ItemIdentifiers.STAFF_OF_LIGHT;
-import static com.elvarg.util.ItemIdentifiers.SUPER_COMBAT_POTION_1_;
-import static com.elvarg.util.ItemIdentifiers.SUPER_COMBAT_POTION_2_;
-import static com.elvarg.util.ItemIdentifiers.SUPER_COMBAT_POTION_3_;
-import static com.elvarg.util.ItemIdentifiers.SUPER_COMBAT_POTION_4_;
-import static com.elvarg.util.ItemIdentifiers.SUPER_RESTORE_4_;
-import static com.elvarg.util.ItemIdentifiers.TOXIC_STAFF_OF_THE_DEAD;
-import static com.elvarg.util.ItemIdentifiers.VERACS_PLATESKIRT_100;
-import static com.elvarg.util.ItemIdentifiers.VOLATILE_NIGHTMARE_STAFF;
-import static com.elvarg.util.ItemIdentifiers.ZARYTE_CROSSBOW;
-
 import com.elvarg.game.content.PrayerHandler;
 import com.elvarg.game.model.MagicSpellbook;
 import com.github.naton1.rl.env.Loadout;
 import java.util.List;
+
+import static com.elvarg.util.ItemIdentifiers.*;
 
 public class NhMedLoadout extends DynamicNhLoadout {
 
@@ -83,7 +46,7 @@ public class NhMedLoadout extends DynamicNhLoadout {
     @Override
     public int[] getMeleeGear() {
         return new int[] {
-            ABYSSAL_TENTACLE,
+            VOIDWAKER,
             ARMADYL_CHESTPLATE,
             VERACS_PLATESKIRT_100,
             AMULET_OF_BLOOD_FURY,
@@ -100,7 +63,8 @@ public class NhMedLoadout extends DynamicNhLoadout {
     @Override
     public int[] getMeleeSpecGear() {
         return new int[] {
-            ARMADYL_GODSWORD,
+            VOIDWAKER,
+            AVERNIC_DEFENDER,
             ARMADYL_CHESTPLATE,
             VERACS_PLATESKIRT_100,
             AMULET_OF_BLOOD_FURY,
@@ -147,9 +111,9 @@ public class NhMedLoadout extends DynamicNhLoadout {
         if (randomizerContext.getRandom().nextInt(10) == 1) {
             randomizerContext.swapMage(BLESSED_SPIRIT_SHIELD, MAGES_BOOK);
         }
-        // 10% chance to use dragon claws over ags
+        // 10% chance to use dragon claws over voidwaker
         if (randomizerContext.getRandom().nextInt(10) == 1) {
-            randomizerContext.swapSpec(ARMADYL_GODSWORD, DRAGON_CLAWS);
+            randomizerContext.swapSpec(VOIDWAKER, DRAGON_CLAWS);
         }
         // 10% chance to use armadyl chainskirt
         if (randomizerContext.getRandom().nextInt(10) == 1) {

@@ -76,7 +76,8 @@ public class NhEnvironment implements AgentEnvironment {
             CombatSpecial.GRANITE_MAUL,
             CombatSpecial.VESTAS_LONGSWORD,
             CombatSpecial.ANCIENT_GODSWORD,
-            CombatSpecial.STATIUS_WARHAMMER);
+            CombatSpecial.STATIUS_WARHAMMER,
+            CombatSpecial.VOIDWAKER);
 
     @Getter
     private final Player agent;
@@ -802,6 +803,10 @@ public class NhEnvironment implements AgentEnvironment {
 
     private boolean isMeleeSpecAgs() {
         return getMeleeSpecialWeapon() == CombatSpecial.ARMADYL_GODSWORD;
+    }
+
+    private boolean isMeleeSpecVoidWaker() {
+        return getMeleeSpecialWeapon() == CombatSpecial.VOIDWAKER;
     }
 
     private boolean isBloodFury() {

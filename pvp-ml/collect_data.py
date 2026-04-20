@@ -33,14 +33,16 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 BUILDS = [
-    "FineTunedNhPure",
-    "FineTunedNhZerk",
-    "FineTunedNhMax"]
+    # "FineTunedNhPure",
+    # "FineTunedNhZerk",
+    # "FineTunedNhMax",
+    "FineTunedNhMed"]
 
 _BUILD_FOR_TARGET = {
-    "FineTunedNhPure": "PURE",
-    "FineTunedNhZerk": "ZERKER",
-    "FineTunedNhMax":  "MAXED",
+    # "FineTunedNhPure": "PURE",
+    # "FineTunedNhZerk": "ZERKER",
+    # "FineTunedNhMax":  "MAXED",
+    "FineTunedNhMed": "MED"
 }
 
 def _slot_target(build: str, slot: int) -> str:
