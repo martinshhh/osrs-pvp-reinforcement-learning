@@ -85,6 +85,8 @@ public class NhEnvironment implements AgentEnvironment {
     private boolean targetAttackedAgent;
     private boolean agentAttackedTarget;
 
+    private String targetLastAttackType;
+
     private double tickDamageScale;
 
     private HitDamage lastTargetPrimaryHit;
@@ -156,6 +158,7 @@ public class NhEnvironment implements AgentEnvironment {
         if (pendingHit.getAttacker() == getTarget() && pendingHit.getTarget() == getAgent()) {
             this.targetAttackedAgent = true;
             this.totalTargetHitCount += 1;
+            this.targetLastAttackType = pendingHit.getCombatType().name();
             this.recentTargetAttackStyles.add(pendingHit.getCombatType());
             if (pendingHit.getCombatType() == CombatType.MAGIC) {
                 this.targetHitMagicCount += 1;
@@ -269,7 +272,8 @@ public class NhEnvironment implements AgentEnvironment {
                 isTargetRangedEquipped() ? 1 : 0,
                 isTargetMageEquipped() ? 1 : 0,
                 isTargetMeleeSpecialWeaponEquipped() ? 1 : 0,
-                isTargetMeleeWeaponVoidwaker() ? 1 : 0,
+                isTargetWithMagicSpecWeapon() ? 1 : 0,
+                getTargetEquippedWeaponSpecCost(),
                 isTargetProtectMeleeActive() ? 1 : 0,
                 isTargetProtectRangedActive() ? 1 : 0,
                 isTargetProtectMagicActive() ? 1 : 0,
@@ -305,6 +309,7 @@ public class NhEnvironment implements AgentEnvironment {
                 getTicksUntilHitOnPlayer(),
                 didPlayerJustAttack() ? 1 : 0,
                 didTargetJustAttack() ? 1 : 0,
+                getTargetLastAttackType(),
                 getAttackCalculatedDamageScale(),
                 getHitsplatsLandedOnAgentScale(),
                 getHitsplatsLandedOnTargetScale(),
@@ -765,9 +770,10 @@ public class NhEnvironment implements AgentEnvironment {
         return this.targetMeleeGearMeleeDefence != -1 ? this.targetMeleeGearMeleeDefence : getMeleeGearMeleeDefence();
     }
 
-//    private int getTargetMeleeWeaponSpecCost() {
-//        return getTargetM
-//    }
+    private int getTargetEquippedWeaponSpecCost() {
+        CombatSpecial combatSpecial = target.getCombatSpecial();
+        return combatSpecial == null ? 0 : combatSpecial.getDrainAmount();
+    }
 
     private boolean isMeleeSpecDds() {
         return getMeleeSpecialWeapon() == CombatSpecial.DRAGON_DAGGER;
@@ -1759,6 +1765,19 @@ public class NhEnvironment implements AgentEnvironment {
         return this.targetAttackedAgent;
     }
 
+    private double getTargetLastAttackType() {
+      if (this.targetLastAttackType == null) {
+        return 0.0f;
+      }
+
+      return switch (this.targetLastAttackType) {
+        case "MELEE" -> 1.0f;
+        case "MAGIC" -> 2.0f;
+        case "RANGED" -> 3.0f;
+        default -> 0.0f;
+      };
+    }
+
     private double getAttackCalculatedDamageScale() {
         return this.tickDamageScale;
     }
@@ -1838,9 +1857,9 @@ public class NhEnvironment implements AgentEnvironment {
                 .anyMatch(c -> Arrays.stream(c.getIdentifiers()).anyMatch(i -> i == weaponId));
     }
 
-    private boolean isTargetMeleeWeaponVoidwaker() {
+    private boolean isTargetWithMagicSpecWeapon() {
         final int weaponId = getTarget().getEquipment().getWeapon().getId();
-        return weaponId == VOIDWAKER;
+        return weaponId == VOIDWAKER || weaponId == VOLATILE_NIGHTMARE_STAFF;
     }
 
     private boolean canMoveAction() {

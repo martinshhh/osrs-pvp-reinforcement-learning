@@ -416,8 +416,12 @@
       "description": "Target spec equipped"
     },
     {
-      "id": "target_melee_weapon_voidwaker",
-      "description": "Target melee weapon voidwaker"
+      "id": "target_with_magic_spec_weapon",
+      "description": "Target with magic spec weapon"
+    },
+    {
+      "id": "target_equipped_weapon_spec_cost",
+      "description": "Target equipped weapon spec cost"
     },
     {
       "id": "target_melee_prayer",
@@ -575,6 +579,10 @@
     {
       "id": "target_just_attacked",
       "description": "Target just attacked"
+    },
+    {
+      "id": "target_last_attack_type",
+      "description": "Target last attack type"
     },
     {
       "id": "tick_new_attack_damage",

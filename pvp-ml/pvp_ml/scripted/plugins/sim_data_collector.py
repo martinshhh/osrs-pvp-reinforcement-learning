@@ -8,8 +8,7 @@ from pvp_ml.scripted.script_plugin import ScriptPlugin
 
 OUTPUT_CSV = os.path.normpath(os.path.join(
     os.path.dirname(__file__),
-    "..", "..", "..", "..", "..", "Kuri",
-    "kuri-prayer-predictor-api", "enemy_gear_log.csv",
+    "..", "..", "data", "enemy_gear_log.csv",
 ))
 
 CSV_HEADER = [
@@ -58,7 +57,7 @@ class SimDataCollectorPlugin(ScriptPlugin):
         self._env_id = env_id
         self._tick = 0
         self._fight_active = False
-        self._target_has_voidwaker = False
+        self._target_has_magic_spec_weapon = 0
         self._episodes = 0
         self._row_buffer: list[list] = []
         print(f"[DC:{self._env_id}] CSV → {OUTPUT_CSV}")
@@ -83,7 +82,8 @@ class SimDataCollectorPlugin(ScriptPlugin):
             ranged_level: float = 1.0,
             strength_level: float = 1.0,
             target_special_percent: float = 0.0,
-            target_melee_weapon_voidwaker: bool = False,
+            target_with_magic_spec_weapon: bool = False,
+            target_equipped_weapon_spec_cost: float = 0.0,
             target_attack_cycle_ticks: float = 0.0,
             is_ice_magic_attack_available: bool = False,
             is_blood_magic_attack_available: bool = False,
@@ -132,14 +132,15 @@ class SimDataCollectorPlugin(ScriptPlugin):
             target_melee_accuracy: float = 00,
             target_melee_strength: float = 00,
             target_just_attacked: float = 00,
+            target_last_attack_type: float = 0.0,
             **kwargs: Any,
     ) -> dict[str, str]:
 
         target_present = target_using_melee or target_using_ranged or target_using_mage
         style = 2 if target_using_mage else (1 if target_using_ranged else 0)
 
-        if not self._target_has_voidwaker and target_melee_weapon_voidwaker:
-            self._target_has_voidwaker = True;
+        if not self._target_has_magic_spec_weapon and target_with_magic_spec_weapon:
+            self._target_has_magic_spec_weapon = 1
 
         if target_present and not self._fight_active:
             self._fight_active = True
@@ -149,13 +150,13 @@ class SimDataCollectorPlugin(ScriptPlugin):
             print(f"[DC:{self._env_id}] Episode {self._episodes} started")
         elif not target_present and self._fight_active:
             self._fight_active = False
-            self._target_has_voidwaker = False
+            self._target_has_magic_spec_weapon = 0
             self._flush_fight()
             print(f"[DC:{self._env_id}] Episode {self._episodes} ended — {self._tick} ticks")
 
         if player_health_percent <= 0 and self._fight_active:
             self._fight_active = False
-            self._target_has_voidwaker = False
+            self._target_has_magic_spec_weapon = 0
             self._flush_fight()
             print(f"[DC:{self._env_id}] Episode {self._episodes} ended (died) — {self._tick} ticks")
 
@@ -176,8 +177,10 @@ class SimDataCollectorPlugin(ScriptPlugin):
                 target_attack_cycle_ticks.item(),
                 target_special_percent.item(),
                 target_just_attacked.item(),
-                target_melee_weapon_voidwaker.item(),
-                player_health_percent.item()
+                self._target_has_magic_spec_weapon,
+                target_equipped_weapon_spec_cost.item(),
+                player_health_percent.item(),
+                target_last_attack_type.item()
             ])
             self._tick += 1
 
