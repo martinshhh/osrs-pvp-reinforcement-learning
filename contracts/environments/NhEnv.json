@@ -416,6 +416,10 @@
       "description": "Target spec equipped"
     },
     {
+      "id": "target_melee_weapon_voidwaker",
+      "description": "Target melee weapon voidwaker"
+    },
+    {
       "id": "target_melee_prayer",
       "description": "Target melee prayer"
     },

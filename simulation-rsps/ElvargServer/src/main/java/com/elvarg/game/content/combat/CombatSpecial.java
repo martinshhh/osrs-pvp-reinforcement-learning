@@ -92,7 +92,7 @@ public enum CombatSpecial {
 
     VOLATILE_NIGHTMARE_STAFF(new int[]{24424}, 55, 1, 1.5,
                              new VolatileNightmareStaffCombatMethod(), WeaponInterface.STAFF),
-  VOIDWAKER(
+    VOIDWAKER(
       new int[] {27690}, 50, 1.10, 1.50, new VoidwakerCombatMethod(), WeaponInterface.SCIMITAR);
 
     public static final Set<Integer> SPECIAL_ATTACK_WEAPON_IDS = Arrays.stream(CombatSpecial.values()).flatMap(cs -> Arrays.stream(cs.getIdentifiers()).boxed()).collect(Collectors.toSet());

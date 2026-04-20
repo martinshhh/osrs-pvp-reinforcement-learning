@@ -1,22 +1,5 @@
 package com.github.naton1.rl.env.nh;
 
-import static com.elvarg.util.ItemIdentifiers.AMULET_OF_BLOOD_FURY;
-import static com.elvarg.util.ItemIdentifiers.DARK_BOW;
-import static com.elvarg.util.ItemIdentifiers.DHAROKS_GREATAXE;
-import static com.elvarg.util.ItemIdentifiers.DIAMOND_BOLTS_E_;
-import static com.elvarg.util.ItemIdentifiers.DIAMOND_DRAGON_BOLTS_E_;
-import static com.elvarg.util.ItemIdentifiers.DRAGONSTONE_DRAGON_BOLTS_E_;
-import static com.elvarg.util.ItemIdentifiers.DRAGON_BOLTS_E_;
-import static com.elvarg.util.ItemIdentifiers.DRAGON_KNIFE;
-import static com.elvarg.util.ItemIdentifiers.HEAVY_BALLISTA;
-import static com.elvarg.util.ItemIdentifiers.LIGHT_BALLISTA;
-import static com.elvarg.util.ItemIdentifiers.MORRIGANS_JAVELIN;
-import static com.elvarg.util.ItemIdentifiers.OPAL_BOLTS_E_;
-import static com.elvarg.util.ItemIdentifiers.OPAL_DRAGON_BOLTS_E_;
-import static com.elvarg.util.ItemIdentifiers.VOLATILE_NIGHTMARE_STAFF;
-import static com.elvarg.util.ItemIdentifiers.ZARYTE_CROSSBOW;
-import static com.elvarg.util.ItemIdentifiers.ZURIELS_STAFF;
-
 import com.elvarg.game.collision.RegionManager;
 import com.elvarg.game.content.Food;
 import com.elvarg.game.content.PotionConsumable;
@@ -62,6 +45,8 @@ import javax.annotation.Nullable;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import static com.elvarg.util.ItemIdentifiers.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -284,6 +269,7 @@ public class NhEnvironment implements AgentEnvironment {
                 isTargetRangedEquipped() ? 1 : 0,
                 isTargetMageEquipped() ? 1 : 0,
                 isTargetMeleeSpecialWeaponEquipped() ? 1 : 0,
+                isTargetMeleeWeaponVoidwaker() ? 1 : 0,
                 isTargetProtectMeleeActive() ? 1 : 0,
                 isTargetProtectRangedActive() ? 1 : 0,
                 isTargetProtectMagicActive() ? 1 : 0,
@@ -779,12 +765,20 @@ public class NhEnvironment implements AgentEnvironment {
         return this.targetMeleeGearMeleeDefence != -1 ? this.targetMeleeGearMeleeDefence : getMeleeGearMeleeDefence();
     }
 
+//    private int getTargetMeleeWeaponSpecCost() {
+//        return getTargetM
+//    }
+
     private boolean isMeleeSpecDds() {
         return getMeleeSpecialWeapon() == CombatSpecial.DRAGON_DAGGER;
     }
 
     private boolean isMeleeSpecDclaws() {
         return getMeleeSpecialWeapon() == CombatSpecial.DRAGON_CLAWS;
+    }
+
+    private boolean isMeleeSpecAgs() {
+        return getMeleeSpecialWeapon() == CombatSpecial.ARMADYL_GODSWORD;
     }
 
     private boolean isEnchantedOpalBolts() {
@@ -799,14 +793,6 @@ public class NhEnvironment implements AgentEnvironment {
     private boolean isEnchantedDiamondBolts() {
         return Arrays.stream(loadout.getRangedGear())
                 .anyMatch(i -> i == DIAMOND_DRAGON_BOLTS_E_ || i == DIAMOND_BOLTS_E_);
-    }
-
-    private boolean isMeleeSpecAgs() {
-        return getMeleeSpecialWeapon() == CombatSpecial.ARMADYL_GODSWORD;
-    }
-
-    private boolean isMeleeSpecVoidWaker() {
-        return getMeleeSpecialWeapon() == CombatSpecial.VOIDWAKER;
     }
 
     private boolean isBloodFury() {
@@ -1850,6 +1836,11 @@ public class NhEnvironment implements AgentEnvironment {
         final int weaponId = getTarget().getEquipment().getWeapon().getId();
         return combatSpecials.stream()
                 .anyMatch(c -> Arrays.stream(c.getIdentifiers()).anyMatch(i -> i == weaponId));
+    }
+
+    private boolean isTargetMeleeWeaponVoidwaker() {
+        final int weaponId = getTarget().getEquipment().getWeapon().getId();
+        return weaponId == VOIDWAKER;
     }
 
     private boolean canMoveAction() {
