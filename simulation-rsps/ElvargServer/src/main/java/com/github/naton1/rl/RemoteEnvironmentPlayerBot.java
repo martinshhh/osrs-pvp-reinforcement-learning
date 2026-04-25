@@ -84,7 +84,7 @@ public class RemoteEnvironmentPlayerBot extends PlayerBot {
     public RemoteEnvironmentPlayerBot(String id, EnvironmentDescriptor<?> environmentDescriptor) {
         super(new PlayerBotDefinition(
                 id,
-                new Location(3096, 3530),
+                new Location(3087, 3552),
                 environmentDescriptor.getDefaultLoadout().asDummyFighterPreset()));
         this.environmentDescriptor = environmentDescriptor;
         this.id = id;

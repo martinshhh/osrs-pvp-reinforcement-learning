@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AgentPlayerBot<T> extends PlayerBot {
 
-    private static final Location START_TILE = new Location(3096, 3530);
+    private static final Location START_TILE = new Location(3087, 3552);
 
     private final CombatInteraction dummyCombatInteraction;
 

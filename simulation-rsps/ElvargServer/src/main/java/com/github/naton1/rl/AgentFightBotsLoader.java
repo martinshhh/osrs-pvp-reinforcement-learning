@@ -27,9 +27,9 @@ public class AgentFightBotsLoader {
 
     List<BuildType> builds =
         List.of(
-//            new BuildType("Pure", NhEnvironmentParams.AccountBuild.PURE),
-//            new BuildType("Zerk", NhEnvironmentParams.AccountBuild.ZERKER),
-//            new BuildType("Max", NhEnvironmentParams.AccountBuild.MAXED),
+            new BuildType("Pure", NhEnvironmentParams.AccountBuild.PURE),
+            new BuildType("Zerk", NhEnvironmentParams.AccountBuild.ZERKER),
+            new BuildType("Max", NhEnvironmentParams.AccountBuild.MAXED),
             new BuildType("Med", NhEnvironmentParams.AccountBuild.MED));
 
         for (BuildType build : builds) {
